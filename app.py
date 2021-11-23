@@ -1,13 +1,8 @@
 from flask import Flask, render_template, url_for, flash, request, redirect
-# redirect - для перехода на страницу
-# request - для просмотра html страницы
 from flask_login.utils import logout_user
-# render_template - для вывод html шаблонов
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import LoginManager, login_user, login_required, UserMixin, current_user
-
-# для хэширования пароля(кодирования данных)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -32,8 +27,7 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Когда выбираем объект на основе класса 'Task'
-    # То будет выдаваться сам объект и его id
+    
     def __repr__(self):
         return '<Task %r' % self.id
 
@@ -43,24 +37,20 @@ class Users(db.Model, UserMixin):
     name = db.Column(db.String(50), nullable=False, unique=True)
     psw = db.Column(db.String(500), nullable=False)
 
+    
     def __repr__(self):
         return '<Users %r' % self.id
 
 
-db.create_all()   # Создаём БД
+#db.create_all()
 
 
 @app.route('/task')
 @login_required
 def index():
-
-    user_id = current_user.id   # текущий пользователь
+    user_id = current_user.id
     task = Task.query.filter_by(user_id=user_id).all()
     #task = Task.query.order_by(Task.done).all()
-    # query - метод, который позволяет обратиться через определённый класс к БД
-    # first - только первый, all - все данные
-    # order_by() - по какому полю сортировать все полученные данные
-    # desc - от нового к старому
     return render_template("index.html", task=task)
 
 
@@ -71,13 +61,11 @@ def create_task():
         title = request.form['title']
         text = request.form['text']
         user_id = current_user.id
-
         task = Task(title=title, text=text, user_id=user_id)
-
         try:
             if len(title) > 0 and len(text) > 0:
-                db.session.add(task)   # add - добавляем
-                db.session.commit()   # commit - сохраняем
+                db.session.add(task)
+                db.session.commit()
                 return redirect('/task')
             else:
                 flash('Заполните все поля!')
@@ -99,7 +87,7 @@ def change_task(id):
             task.text = request.form['text']
             try:
                 if len(task.title) > 0 and len(task.text) > 0:
-                    db.session.commit()   # commit - сохраняем
+                    db.session.commit()
                 return redirect('/task')
             except:
                 return "При редактировании статьи произошла ошибка"
@@ -152,14 +140,12 @@ def delete_task(id):
         return render_template("page404.html")
 
 
-# Если ошибка 404 - неправельный адрес страницы
+# Ошибка 404 - несуществующий адрес страницы
 @app.errorhandler(404)
 def pageNotFount(error):
     return render_template('page404.html'), 404
 
-# Если пользователь не авторизован и ломится на страницу
-
-
+# Если пользователь хочет попасть на чужую страницу
 @app.errorhandler(401)
 def userNotLogin(error):
     return render_template('page401.html'), 401
@@ -171,7 +157,6 @@ def login():
     if request.method == "POST":
         name = request.form['name']
         psw = request.form['psw']
-
         if name and psw:
             user = Users.query.filter_by(name=name).first()
             if user:
@@ -206,11 +191,8 @@ def register():
                 hash = generate_password_hash(request.form['psw'])
                 name = request.form['name']
                 user = Users(name=name, psw=hash)
-                db.session.add(user)   # add - добавляем в сессию
-                # res = db.session.flush(user)   # перемещает в табл, но не сохраняет
-
-                db.session.commit()   # commit - сохраняем
-                # db.session.roolback()   # откатываем, если ошибка
+                db.session.add(user)
+                db.session.commit()
                 if db.session:
                     flash("Вы успешно зарегистрированы", "success")
                     return redirect(url_for('login'))
