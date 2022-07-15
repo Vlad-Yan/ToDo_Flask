@@ -1,0 +1,72 @@
+
+.my-container{
+  width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 10%; 
+}
+
+.centered{
+    text-align: center;
+}
+
+.my-submit{
+    background-color: #2955e6;
+    border: none;
+    color: white;
+    padding: 7px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+.my-submit:hover {
+    color: rgba(255, 255, 255, 0.938);  
+}
+
+.my-link{
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.my-header{
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: #446beb;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.block {
+    display: block;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+    padding: 1rem 1rem;
+    border-radius: .25rem;
+    width: 422px;
+    height: 210px;
+    margin: 5px;
+    float: left;
+}
+
+.line-limit-length {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.icon{
+    padding: 4rem 11em ;
+}
+
+.check{
+    color: red;
+}
+
+.my-up{
+    vertical-align: middle;
+}
